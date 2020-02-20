@@ -1,2 +1,2 @@
 # powerPayments
-Payment api for powerbyte
+Postventa SDK for I.N.E.S. after sales service.
