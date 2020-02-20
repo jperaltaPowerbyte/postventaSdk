@@ -9,8 +9,8 @@ class InesPostventa
 
     private $key;
     private $secret;
-//    private $sdkUri = 'https://ines.net.ar/postventa';
-    private $sdkUri = 'http://ines.postventa';
+    private $sdkUri = 'https://ines.net.ar/postventa';
+//    private $sdkUri = 'http://ines.postventa';
     private $userData;
 
 
