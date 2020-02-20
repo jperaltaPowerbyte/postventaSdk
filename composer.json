@@ -1,8 +1,8 @@
 {
    "name": "ines/postventa",
    "type": "library",
-   "description": "A simple payment SDK.",
-   "keywords": ["payment", "decidir", "sdk"],
+   "description": "After sales SDK.",
+   "keywords": ["after sales","sdk"],
    "homepage": "https://github.com/jperaltaPowerbyte/postventaSdk",
    "license": "MIT",
    "authors": [
