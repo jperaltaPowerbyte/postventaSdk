@@ -1,0 +1,22 @@
+{
+   "name": "ines/postventa",
+   "type": "library",
+   "description": "A simple payment SDK.",
+   "keywords": ["payment", "decidir", "sdk"],
+   "homepage": "https://github.com/jperaltaPowerbyte/postventaSdk",
+   "license": "MIT",
+   "authors": [
+      {
+         "name": "Javier Alejandro Peralta",
+         "email": "javier.peralta666@gmail.com",
+         "homepage": "https://github.com/jperaltaPowerbyte"
+      }
+   ],
+   "minimum-stability": "dev",
+   "require": {
+      "php": ">=5.6.0"
+   },
+   "autoload": {
+      "classmap": ["InesPostventa.php"]
+   }
+}
