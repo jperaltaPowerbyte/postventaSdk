@@ -1,22 +1,27 @@
 {
-   "name": "ines/postventa",
-   "type": "library",
-   "description": "After sales SDK.",
-   "keywords": ["after sales","sdk"],
-   "homepage": "https://github.com/jperaltaPowerbyte/postventaSdk",
-   "license": "MIT",
-   "authors": [
-      {
-         "name": "Javier Alejandro Peralta",
-         "email": "javier.peralta666@gmail.com",
-         "homepage": "https://github.com/jperaltaPowerbyte"
-      }
-   ],
-   "minimum-stability": "dev",
-   "require": {
-      "php": ">=5.6.0"
-   },
-   "autoload": {
-      "classmap": ["InesPostventa.php"]
-   }
+  "name": "ines/postventa",
+  "type": "library",
+  "description": "After sales SDK.",
+  "keywords": [
+    "after sales",
+    "sdk"
+  ],
+  "homepage": "https://github.com/jperaltaPowerbyte/postventaSdk",
+  "license": "MIT",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Javier Alejandro Peralta",
+      "email": "javier.peralta666@gmail.com",
+      "homepage": "https://github.com/jperaltaPowerbyte"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0"
+  },
+  "autoload": {
+    "classmap": [
+      "InesPostventa.php"
+    ]
+  }
 }
