@@ -54,16 +54,26 @@ class InesPostventa
         ));
 
         if ($userData['retailer']) {
-            $this->userData = $userData['retailer'];
+            $this->userData = (object) $userData['retailer'];
         } else {
             throw new Exception('Error de credenciales.');
         }
 
     }
 
-    public function tickets(){
-        if($this->userData){
-            return $this->sendRequest("tickets/{$this->userData['id']}",'get');
+    public function tickets()
+    {
+        if ($this->userData) {
+            return $this->sendRequest("tickets/{$this->userData->id}", 'get');
+        }
+
+        return [];
+    }
+
+    public function ticket($ticket_id)
+    {
+        if ($this->userData) {
+            return $this->sendRequest("tickets/{$this->userData->id}/{$ticket_id}", 'get');
         }
 
         return [];
@@ -72,9 +82,14 @@ class InesPostventa
     /**
      * @return mixed
      */
-    public function getUserData()
+    public function getUserData($array = false)
     {
-        return $this->userData;
+        if ($array) {
+            return $this->userData;
+        }
+
+        return (object)$this->userData;
+
     }
 
     /**
@@ -104,7 +119,7 @@ class InesPostventa
         $context = stream_context_create($options);
 
         $result = file_get_contents("{$this->sdkUri}/{$request}?" . http_build_query($data), false, $context);
-
+//var_dump($result);
         $result = json_decode($result, true);
 
         if ($result === FALSE) {
