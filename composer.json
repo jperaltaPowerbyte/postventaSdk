@@ -16,6 +16,7 @@
       "homepage": "https://github.com/jperaltaPowerbyte"
     }
   ],
+  "minimum-stability": "stable",
   "require": {
     "php": ">=5.6.0"
   },
