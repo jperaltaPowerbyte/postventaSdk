@@ -3,6 +3,17 @@
 namespace InesPostventa;
 
 use Exception;
+use Freshdesk\Api;
+use Freshdesk\Exceptions\AccessDeniedException;
+use Freshdesk\Exceptions\ApiException;
+use Freshdesk\Exceptions\AuthenticationException;
+use Freshdesk\Exceptions\ConflictingStateException;
+use Freshdesk\Exceptions\MethodNotAllowedException;
+use Freshdesk\Exceptions\NotFoundException;
+use Freshdesk\Exceptions\RateLimitExceededException;
+use Freshdesk\Exceptions\UnsupportedAcceptHeaderException;
+use Freshdesk\Exceptions\UnsupportedContentTypeException;
+use Freshdesk\Exceptions\ValidationException;
 
 class InesPostventa
 {
@@ -18,6 +29,8 @@ class InesPostventa
     private $article = [];
     private $orderArticles = [];
 
+    private $freshdesk;
+
     /**
      * PowerPayments constructor.
      * @param $key
@@ -30,6 +43,8 @@ class InesPostventa
         $this->secret = $secret;
 
         $this->checkUserData();
+
+        $this->freshdesk = new Api("uyOmDjijr4GpL5FDFlmV", "powerbyte");
     }
 
     /**
@@ -54,7 +69,7 @@ class InesPostventa
         ));
 
         if ($userData['retailer']) {
-            $this->userData = (object) $userData['retailer'];
+            $this->userData = (object)$userData['retailer'];
         } else {
             throw new Exception('Error de credenciales.');
         }
@@ -64,16 +79,44 @@ class InesPostventa
     public function tickets()
     {
         if ($this->userData) {
-            return $this->sendRequest("tickets/{$this->userData->id}", 'get');
+            if ($tickets = $this->sendRequest("tickets/{$this->userData->id}", 'get')) {
+                foreach ($tickets['tickets'] as $index => $ticket) {
+                    if ($ticket['freshdesk_id']) {
+                        $tickets[$index]['freshdesk_data'] = $this->freshdesk->tickets->view($ticket['freshdesk_id']);
+                    }
+                }
+
+                return $tickets;
+            }
+
         }
 
         return [];
     }
 
+    /**
+     * @param $ticket_id
+     * @return array|bool|false|mixed|string
+     * @throws AccessDeniedException
+     * @throws ApiException
+     * @throws AuthenticationException
+     * @throws ConflictingStateException
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     * @throws RateLimitExceededException
+     * @throws UnsupportedAcceptHeaderException
+     * @throws UnsupportedContentTypeException
+     * @throws ValidationException
+     */
     public function ticket($ticket_id)
     {
         if ($this->userData) {
-            return $this->sendRequest("tickets/{$this->userData->id}/{$ticket_id}", 'get');
+            if ($ticket = $this->sendRequest("tickets/{$this->userData->id}/{$ticket_id}", 'get')) {
+                if ($ticket['freshdesk_id']) {
+                    $ticket['freshdesk_data'] = $this->freshdesk->tickets->view($ticket['freshdesk_id']);
+                }
+            }
+            return $ticket;
         }
 
         return [];
@@ -214,5 +257,66 @@ class InesPostventa
     public function paymentFormRedirect($order_id)
     {
         header("Location:{$this->sdkUri}/paymentForm/{$order_id}");
+    }
+
+    /**
+     * @param $ticketId
+     * @param $statusId
+     * @return bool
+     * @throws AccessDeniedException
+     * @throws ApiException
+     * @throws AuthenticationException
+     * @throws ConflictingStateException
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     * @throws RateLimitExceededException
+     * @throws UnsupportedAcceptHeaderException
+     * @throws UnsupportedContentTypeException
+     * @throws ValidationException
+     */
+    public function updateTicketStatus($ticketId, $statusId)
+    {
+
+        if (!in_array($statusId, [2, 3, 4, 5])) {
+            throw new Exception('Error: ingresar un estado de Freshdesk válido.');
+        }
+
+        if(!$ticketId){
+            throw new Exception('Error: ingresar un ticket de Freshdesk válido.');
+        }
+
+        $responder = $this->freshdesk->agents->current();
+
+        $ticket_data = array(
+            "responder_id" => $responder['id'],
+            "status" => $statusId,
+        );
+
+        try {
+            $updated = $this->freshdesk->tickets->update($ticketId, $ticket_data);
+            return true;
+        } catch (AccessDeniedException $e) {
+            var_dump($e);
+        } catch (AuthenticationException $e) {
+            var_dump($e);
+        } catch (ConflictingStateException $e) {
+            var_dump($e);
+        } catch (MethodNotAllowedException $e) {
+            var_dump($e);
+        } catch (NotFoundException $e) {
+            var_dump($e);
+        } catch (RateLimitExceededException $e) {
+            var_dump($e);
+        } catch (UnsupportedAcceptHeaderException $e) {
+            var_dump($e);
+        } catch (UnsupportedContentTypeException $e) {
+            var_dump($e);
+        } catch (ValidationException $e) {
+            var_dump($e);
+        } catch (ApiException $e) {
+            var_dump($e);
+        }
+
+
     }
 }
