@@ -10,8 +10,8 @@ use InesPostventa\InesPostventa;
 $inesPostventa = new InesPostventa('jperalta.powerbyte@gmail.com', '1c3b7c04cb1ff3361a632b3131960543b8b37c36fd770ac74e8395702285ff5adf8aa4ded7373a7aed2f8d306757237bb2b96dbae396d2f4b5d64199');
 //$userData = $powerPayments->getUserData();
 
-$ticket_id = 5;
-$ticket = $inesPostventa->ticket(5);
+$ticket_id = 6;
+$ticket = $inesPostventa->ticket($ticket_id);
 
 /*
  * ALLOWED STATUSES
@@ -22,10 +22,11 @@ $ticket = $inesPostventa->ticket(5);
  */
 
 if ($ticket) {
-    $updatedTicket = $inesPostventa->updateTicketStatus($ticket['freshdesk_id'], 5); //Return true or false;
-    if($updatedTicket){
+    $updatedTicket = $inesPostventa->updateTicketTags($ticket['freshdesk_id'], ['tag 1', 'tag 2', 'tag 75']); //Return true or false;
+
+    if ($updatedTicket) {
         echo "Ticket {$ticket_id} actualizado";
-    }else{
+    } else {
         echo "Ocurrió un error al actualizar el Ticket {$ticket_id}.";
     }
 }
